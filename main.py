@@ -36,14 +36,14 @@ def main():
         'column':
             [
                 (2,),
-                (1,),
+                (1, 1),
                 (5,),
                 (3,),
                 (4,)
             ],
         'row':
             [
-                (1,),
+                (2,),
                 (1, 1),
                 (3,),
                 (1, 3),
@@ -55,10 +55,8 @@ def main():
     print(f'Instructions: {task}')
 
 
-    i: int = 0
     give_up = True
     while True:
-
         for y, instruction in enumerate(task['column']):
             offset = height - (sum(instruction) + len(instruction) - 1)
             if offset < min(instruction):
@@ -66,6 +64,7 @@ def main():
                 give_up = False
                 # solving...
                 if offset == 0:
+                    i = 0
                     for group in instruction:
                         for pixel in range(group):
                             board[i][y] = True
@@ -75,15 +74,33 @@ def main():
                             break
                         board[i][y] = False
                         i += 1
+                else:
+                    temp_line = []
+                    for group in instruction:
+                        for pixel in range(group):
+                            temp_line.append(group)
+                        temp_line.append(0)
+                    temp_line.pop()
+
+                    temp_col_shifted = temp_line.copy()
+                    for _ in range(offset):
+                        temp_col_shifted.insert(0, -1)
+                        temp_col_shifted.pop()
+
+                    i = 0
+                    for a, b in zip(temp_line, temp_col_shifted):
+                        if a == b and a != 0:
+                            board[i][y] = True
+                        i += 1
 
         for x, instruction in enumerate(task['row']):
-            x: int
             offset = width - (sum(instruction) + len(instruction) - 1)
             if offset < min(instruction):
                 print(f'[*] Row {task["row"].index(instruction)} is solvable')
                 give_up = False
                 # solving...
                 if offset == 0:
+                    i = 0
                     for group in instruction:
                         for pixel in range(group):
                             board[x][i] = True
@@ -93,6 +110,24 @@ def main():
                             break
                         board[x][i] = False
                         i += 1
+                else:
+                    temp_line = []
+                    for group in instruction:
+                        for pixel in range(group):
+                            temp_line.append(group)
+                        temp_line.append(0)
+                    temp_line.pop()
+
+                    temp_col_shifted = temp_line.copy()
+                    for _ in range(offset):
+                        temp_col_shifted.insert(0, -1)
+                        temp_col_shifted.pop()
+
+                    i = 0
+                    for a, b in zip(temp_line, temp_col_shifted):
+                        if a == b and a != 0:
+                            board[x][i] = True
+                        i += 1
 
         give_up = True
         if give_up is True:
@@ -101,7 +136,6 @@ def main():
             break
         else:
             give_up = True
-
 
 if __name__ == '__main__':
     main()
