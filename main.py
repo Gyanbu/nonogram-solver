@@ -15,58 +15,72 @@ def print_board(board):
 
 
 def main():
-    task = {}
+    task = {
+        'column': [],
+        'row': []
+    }
     width = 5
     height = 5
 
     blank_col = []
     for col in range(width):
-        task[f'c{col + 1}'] = ()
+        task['column'].append(())
         blank_col.append(None)
 
     board = []
     for row in range(height):
-        task[f'r{row + 1}'] = ()
+        task['row'].append(())
         board.append(blank_col.copy())
 
     task = {
-        'c1': (2,),
-        'c2': (1,),
-        'c3': (5,),
-        'c4': (3,),
-        'c5': (4,),
-
-        'r1': (1,),
-        'r2': (1, 1),
-        'r3': (3,),
-        'r4': (1, 3),
-        'r5': (5,)
+        'column':
+            [
+                (2,),
+                (1,),
+                (5,),
+                (3,),
+                (4,)
+            ],
+        'row':
+            [
+                (1,),
+                (1, 1),
+                (3,),
+                (1, 3),
+                (5,)
+            ]
     }
 
+    print(board)
     print(f'Instructions: {task}')
 
-    solved = False
-    while solved is not True:
-        for step in task:
-            step_solvable = False
-            needed_space = sum(task[step]) + len(task[step]) - 1
 
-            if step.startswith('c'):
-                offset = height - needed_space
-                if offset < min(task[step]):
-                    print(f'[*] Step {step} is solvable')
-                    step_solvable = True
+    give_up = True
+    while True:
 
-            elif step.startswith('r'):
-                offset = height - needed_space
-                if offset < min(task[step]):
-                    print(f'[*] Step {step} is solvable')
-                    step_solvable = True
+        for x, instruction in enumerate(task['column']):
+            offset = height - (sum(instruction) + len(instruction) - 1)
+            if offset < min(instruction):
+                print(f'[*] Column {task["column"].index(instruction)} is solvable')
+                give_up = False
+                # solving...
+                for pixel in board[x]:
+                    pass
 
-            if step_solvable is True:
-                pass
+        for instruction in task['row']:
+            offset = width - (sum(instruction) + len(instruction) - 1)
+            if offset < min(instruction):
+                print(f'[*] Column {task["row"].index(instruction)} is solvable')
+                give_up = False
+                # solving...
 
-        return
+        give_up = True
+        if give_up is True:
+            print('[:<] Gave up')
+            print_board(board)
+            break
+        else:
+            give_up = True
 
 
 if __name__ == '__main__':
