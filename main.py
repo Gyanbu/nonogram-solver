@@ -55,24 +55,44 @@ def main():
     print(f'Instructions: {task}')
 
 
+    i: int = 0
     give_up = True
     while True:
 
-        for x, instruction in enumerate(task['column']):
+        for y, instruction in enumerate(task['column']):
             offset = height - (sum(instruction) + len(instruction) - 1)
             if offset < min(instruction):
                 print(f'[*] Column {task["column"].index(instruction)} is solvable')
                 give_up = False
                 # solving...
-                for pixel in board[x]:
-                    pass
+                if offset == 0:
+                    for group in instruction:
+                        for pixel in range(group):
+                            board[i][y] = True
+                            i += 1
+                        if i == height:
+                            i = 0
+                            break
+                        board[i][y] = False
+                        i += 1
 
-        for instruction in task['row']:
+        for x, instruction in enumerate(task['row']):
+            x: int
             offset = width - (sum(instruction) + len(instruction) - 1)
             if offset < min(instruction):
-                print(f'[*] Column {task["row"].index(instruction)} is solvable')
+                print(f'[*] Row {task["row"].index(instruction)} is solvable')
                 give_up = False
                 # solving...
+                if offset == 0:
+                    for group in instruction:
+                        for pixel in range(group):
+                            board[x][i] = True
+                            i += 1
+                        if i == height:
+                            i = 0
+                            break
+                        board[x][i] = False
+                        i += 1
 
         give_up = True
         if give_up is True:
